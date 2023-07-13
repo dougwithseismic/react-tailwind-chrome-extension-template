@@ -1,4 +1,4 @@
-# A minimal v3 manifest web extension boilerplate with React + Tailwind + HMR 🔥
+# dougwithseismic/react-tailwind-chrome-extension-template 🔥
 
 So, you want to build modern web extensions with React & Tailwind? Step on in. This is the starting point for all my browser extensions, including Promptheus, which lets over 28,000 weekly users talk to ChatGPT with their voice.
 
