@@ -6,6 +6,8 @@ Why do we need another extension boilerplate? Because v3 manifest! At time of wr
 
 ## 1. Setup
 
+First off, give this a star! It costs nothing, and it helps more developers get started with products, faster. Let's lift one another up here.
+
 ### i. Project Setup
 
 Start by installing your dependencies as usual. We're using Vite to build and React and Tailwind for everything. If you're used to modern web development then you'll have no problem working with this project. I built this boilerplate to match as closely as possible to the experience I'd expect when building web apps with React.
