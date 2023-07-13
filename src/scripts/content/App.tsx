@@ -23,8 +23,8 @@ const App = () => {
                         <div className="inline-flex items-center justify-end p-2 rounded-full bg-gradient-to-r from-fuchsia-700 to-blue-400">
                             <div className="inline-flex flex-col self-stretch justify-center gap-2 px-4">
                                 <div className="font-normal leading-tight tracking-wider text-white text-normal">
-                                    You can earn cashback for your group with this site! Shop and
-                                    save now.
+                                    Hey, this is an overlay from the Content script, built with
+                                    React and Tailwind. Happy Building!
                                 </div>
                             </div>
                             <div className="inline-flex items-start self-stretch justify-start p-4 px-8 duration-200 bg-white rounded-full cursor-pointer hover:bg-gothamBlack-50">
