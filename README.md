@@ -97,6 +97,8 @@ You'll also notice that we're watching for changes on the content script so that
 
 ### Protip: Quick Reloading Shortcut
 
+TL;DR - Head to `chrome://extensions/shortcuts` and set your shortcut to Refresh Extension. WITHOUT DOING THIS, SHORTCUTS WONT WORK :)
+
 Heading to `chrome://extensions` and hitting the reload button every time I wanted to make a simple change was a nonsustainable headache so I added a shortcut `Ctrl + Space` (defaults to Command + Space for Mac) that reloads the extension in the same way.
 
 If you want to edit / disable this (and it could be a good idea to do so for production ships) then comment out the `commands` section on `src/manifest.ts`, or remove the `Chrome.commands` mentions from `src/scripts/service-worker/service-worker.ts` More here. [https://developer.chrome.com/docs/extensions/reference/commands/](https://developer.chrome.com/docs/extensions/reference/commands/)

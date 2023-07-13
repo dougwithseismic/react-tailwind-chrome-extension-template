@@ -76,7 +76,7 @@ const createBaseManifest = async (): Promise<Manifest> => {
                 }
             ],
             commands: {
-                _executeRefresh: {
+                refresh_extension: {
                     suggested_key: {
                         default: 'Ctrl+Space'
                     },

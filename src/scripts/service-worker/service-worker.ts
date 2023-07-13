@@ -27,7 +27,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 chrome.commands.onCommand.addListener(command => {
     console.log(`Command: ${command}`)
-    if (command === '_executeRefresh') {
+
+    if (command === 'refresh_extension') {
         chrome.runtime.reload()
     }
 })
