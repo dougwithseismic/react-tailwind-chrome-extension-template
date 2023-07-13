@@ -13,7 +13,7 @@ const injectReact = (rootId: string): void => {
 
         if (container) {
             container.id = rootId
-            // container.style.position = 'absolute'
+            container.style.position = 'inherit'
             container.style.zIndex = '2147483666'
         }
 

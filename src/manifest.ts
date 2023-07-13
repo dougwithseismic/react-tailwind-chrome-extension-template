@@ -41,20 +41,20 @@ const createBaseManifest = async (): Promise<Manifest> => {
             version: pkg.version,
             description: pkg.description ?? 'GIVE ME A DESCRIPTION',
             action: {
-                default_popup: 'popup.html'
+                default_popup: './src/scripts/popup/popup.html'
             },
             options_ui: {
-                page: 'options.html',
+                page: './src/scripts/options/options.html',
                 open_in_tab: true
             },
             background: {
-                service_worker: 'js/serviceWorker.js',
+                service_worker: 'js/service-worker.js',
                 type: 'module'
             },
             icons: {
-                16: './icons/icon-16.png',
-                48: './icons/icon-48.png',
-                128: './icons/icon-128.png'
+                16: './assets/icon-16.png',
+                48: './assets/icon-48.png',
+                128: './assets/icon-128.png'
             },
             permissions: [],
             content_scripts: [

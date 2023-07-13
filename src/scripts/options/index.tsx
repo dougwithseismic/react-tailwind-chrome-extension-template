@@ -1,15 +1,8 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import '@/styles/index.css'
 import { createRoot } from 'react-dom/client'
+import Options from './Options'
 
-const Options = () => {
-    return (
-        <div>
-            <h1>Options</h1>
-        </div>
-    )
-}
 const container = document.getElementById('options-root')
 const root = createRoot(container!)
 
