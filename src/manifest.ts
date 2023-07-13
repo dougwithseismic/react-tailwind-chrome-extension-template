@@ -29,6 +29,18 @@ interface Manifest {
         matches: string[]
         resources: string[]
     }>
+    commands?: {
+        [key: string]: {
+            suggested_key: {
+                default: string
+                mac?: string
+                windows?: string
+                chromeos?: string
+                linux?: string
+            }
+            description: string
+        }
+    }
 }
 
 const createBaseManifest = async (): Promise<Manifest> => {
@@ -62,7 +74,15 @@ const createBaseManifest = async (): Promise<Manifest> => {
                     matches: ['<all_urls>'],
                     js: ['./js/content.js']
                 }
-            ]
+            ],
+            commands: {
+                _executeRefresh: {
+                    suggested_key: {
+                        default: 'Ctrl+Space'
+                    },
+                    description: 'Refresh Extension' // https://developer.chrome.com/docs/extensions/reference/commands/
+                }
+            }
         }
     } catch (error) {
         console.error('Error reading package.json:', error)

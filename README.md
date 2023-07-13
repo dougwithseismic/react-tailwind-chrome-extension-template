@@ -79,6 +79,30 @@ You'll find everything you need to get building in `src/scripts/...` so here's a
 
 - `src/scripts/service-worker` - The background script. Check out the examples on how to pass messages back and forth between Content and Background script. It should consist mainly of helper functions and listeners for specific events. You can debug this by heading over to `chrome://extensions` and clicking the `inspect service worker` link, that will open up a new devtools env specifically for the background script.
 
+## Building, Bundling and Shipping 🚢
+
+**READ THIS NEXT SECTION CAREFULLY BECAUSE THERE ARE SOME TIPS THAT WILL SAVE YOU TIME WHILST DEVELOPING YOUR EXTENSION!
+
+To get your extension running on Chrome, you'll need to do a couple (easy) steps. Firstly, run the build command, which uses vite to build and output to the `dist` folder.
+
+```bash
+npm run build
+```
+
+From here, open Chrome and go to `chrome://extensions`, then hit `Load Unpacked` and choose the newly made `dist` directory. Assuming no errors, voila! You're in.
+
+You'll notice that `npm run build` calls on two vite configs, one for your `content` script, and another for everything else. The reasoning for this is that we're having to output two very different builds (a normal 'vite'-ish HTML build, and a library (the `content` script)).
+
+You'll also notice that we're watching for changes on the content script so that it rebuilds every time we make a change there. (`vite.config.content.ts` > watch to make edits.) This should make the annoying task of rebuilding, and reloading your extension, slightly easier.
+
+### Protip: Quick Reloading Shortcut
+
+Heading to `chrome://extensions` and hitting the reload button every time I wanted to make a simple change was a nonsustainable headache so I added a shortcut `Ctrl + Space` (defaults to Command + Space for Mac) that reloads the extension in the same way.
+
+If you want to edit / disable this (and it could be a good idea to do so for production ships) then comment out the `commands` section on `src/manifest.ts`, or remove the `Chrome.commands` mentions from `src/scripts/service-worker/service-worker.ts`
+
+Using `npm run build` with the watcher, and the Quick Reload Shortcut, you can get pretty close to a seamless hot-reloading experience, though its not perfect. Any ideas to make this more fluid are welcome!
+
 ## Need help?
 
 Follow me on [twitter.com/dougiesilkstone](https://twitter.com/dougiesilkstone) and drop me a message, and please do submit a PR to help improve! I'll be running a week long hackathon to build and launch an extension project from start to finish, so if you're interested in joining, follow for more info.
