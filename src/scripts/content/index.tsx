@@ -1,44 +1,28 @@
-import React from 'react'
 import { createRoot } from 'react-dom/client'
 import styles from '@/styles/index.css?inline'
 import App from './App'
 
-const isProduction: boolean = process.env.NODE_ENV === 'production'
-const ROOT_ID = 'RENAME_ME_IF_YOU_WANT'
+const isProduction = process.env.NODE_ENV === 'production'
+const ROOT_ID = 'chrome-ext-root'
 
-const injectReact = (rootId: string): void => {
-    try {
-        const container = document.createElement('div')
-        document.body.appendChild(container)
+function injectReact(rootId: string) {
+    const container = document.createElement('div')
+    container.id = rootId
+    container.style.position = 'inherit'
+    container.style.zIndex = '2147483666'
+    document.body.appendChild(container)
 
-        if (container) {
-            container.id = rootId
-            container.style.position = 'inherit'
-            container.style.zIndex = '2147483666'
-        }
+    const target = isProduction
+        ? container.attachShadow({ mode: 'open' })
+        : container
 
-        if (isProduction) {
-            console.log('Production mode 🚀. Adding Shadow DOM')
-            container.attachShadow({ mode: 'open' })
-        } else {
-            console.log('Development mode 🛠')
-        }
-
-        const target: ShadowRoot | HTMLElement = isProduction ? container.shadowRoot! : container
-
-        const root = createRoot(target!)
-
-        root.render(
-            <React.StrictMode>
-                <>
-                    {isProduction && <style>{styles.toString()}</style>}
-                    <App />
-                </>
-            </React.StrictMode>
-        )
-    } catch (error) {
-        console.error('Error Injecting React', error)
-    }
+    const root = createRoot(target)
+    root.render(
+        <>
+            {isProduction && <style>{styles}</style>}
+            <App />
+        </>
+    )
 }
 
 injectReact(ROOT_ID)

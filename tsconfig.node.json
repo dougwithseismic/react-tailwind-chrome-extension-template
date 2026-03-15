@@ -2,12 +2,13 @@
     "compilerOptions": {
         "composite": true,
         "module": "ESNext",
-        "moduleResolution": "Node",
+        "moduleResolution": "bundler",
         "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
         "baseUrl": ".",
         "paths": {
             "@/*": ["./src/*"]
         }
     },
-    "include": ["vite.config.ts", "./src/**/*.ts", "./src/**/*.tsx"]
+    "include": ["vite.config.ts", "vite.config.content.ts", "src/manifest.ts", "scripts/**/*.ts"]
 }

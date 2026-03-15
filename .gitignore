@@ -1,3 +1,14 @@
+.DS_Store
+
+# TSC build artifacts
+*.tsbuildinfo
+src/manifest.js
+src/manifest.d.ts
+vite.config.js
+vite.config.d.ts
+vite.config.content.js
+vite.config.content.d.ts
+
 # Logs
 logs
 *.log

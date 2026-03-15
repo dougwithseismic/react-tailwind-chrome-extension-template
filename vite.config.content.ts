@@ -1,49 +1,34 @@
-// TypeScript allows us to safely import JSON with assertion
-import packageJson from './package.json' assert { type: 'json' }
-
-import { defineConfig, Plugin, ResolvedConfig, BuildOptions } from 'vite'
-import { isDev, r } from './scripts/utility'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
+import tailwindcss from '@tailwindcss/vite'
+import * as path from 'path'
+import { fileURLToPath } from 'url'
 
-const { name }: { name: string } = packageJson
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-console.info(' ---> Starting Content Script Build 🤞 <---')
-
-const config = defineConfig({
-    plugins: [react()],
-
+export default defineConfig({
     resolve: {
-        alias: [{ find: '@', replacement: path.resolve(__dirname, 'src') }]
+        alias: { '@': path.resolve(__dirname, 'src') },
     },
-
     define: {
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
     },
-
     build: {
-        watch: {
-            include: ['./src/**/*']
-        },
-
-        outDir: r('dist/js'),
+        outDir: 'dist/js',
         cssCodeSplit: false,
         emptyOutDir: false,
-        sourcemap: isDev ? 'inline' : false,
-
+        sourcemap: process.env.NODE_ENV !== 'production' ? 'inline' : false,
         lib: {
-            entry: r('src/scripts/content/index.tsx'),
-            name: name,
-            formats: ['iife'] // Bundle everything together so chrome.runtime is available in our React app/components.
+            entry: path.resolve(__dirname, 'src/scripts/content/index.tsx'),
+            name: 'content',
+            formats: ['iife'],
         },
-
         rollupOptions: {
             output: {
                 entryFileNames: 'content.js',
-                extend: true
-            }
-        }
-    } as BuildOptions
+                extend: true,
+            },
+        },
+    },
+    plugins: [tailwindcss(), react()],
 })
-
-export default config

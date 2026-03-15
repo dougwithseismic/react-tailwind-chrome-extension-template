@@ -1,20 +1,12 @@
-import React from 'react'
-import { createRoot } from 'react-dom/client'
 import '@/styles/index.css'
+import { createRoot } from 'react-dom/client'
 
 const OnInstalled = () => {
     return (
-        <div>
-            <h1>Thanks for Installing!</h1>
+        <div className="flex items-center justify-center min-h-screen bg-neutral-900">
+            <h1 className="text-2xl font-semibold text-neutral-50">Thanks for Installing!</h1>
         </div>
     )
 }
 
-const container = document.getElementById('onInstalled')
-const root = createRoot(container!)
-
-root.render(
-    <React.StrictMode>
-        <OnInstalled />
-    </React.StrictMode>
-)
+createRoot(document.getElementById('onInstalled')!).render(<OnInstalled />)

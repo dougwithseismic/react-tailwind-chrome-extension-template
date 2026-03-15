@@ -1,24 +1,22 @@
-import { browser } from 'webextension-polyfill-ts'
-
-export const sendMessageToBackground = async (message: any): Promise<any> => {
+export async function sendMessageToBackground(message: unknown): Promise<unknown> {
     try {
-        return await browser.runtime.sendMessage(message)
+        return await chrome.runtime.sendMessage(message)
     } catch (error) {
-        console.error(`Error sending message to background: ${error}`)
+        console.error('Error sending message to background:', error)
         return null
     }
 }
 
-export const sendMessageToContentScript = async (message: any): Promise<any> => {
+export async function sendMessageToContentScript(message: unknown): Promise<unknown> {
     try {
-        const tabs = await browser.tabs.query({ active: true, currentWindow: true })
-        if (!tabs[0]?.id) {
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+        if (!tab?.id) {
             console.error('No active tab found.')
             return null
         }
-        return await browser.tabs.sendMessage(tabs[0].id, message)
+        return await chrome.tabs.sendMessage(tab.id, message)
     } catch (error) {
-        console.error(`Error sending message to content script: ${error}`)
+        console.error('Error sending message to content script:', error)
         return null
     }
 }
