@@ -5,8 +5,8 @@
     "version": "1.0.0",
     "type": "module",
     "scripts": {
-        "dev": "concurrently \"vite build --watch\" \"vite build --watch --config vite.config.content.ts\"",
-        "build": "tsc -b && vite build && vite build --config vite.config.content.ts",
+        "dev": "concurrently \"vite build --watch\" \"node scripts/content-scripts.mjs --watch\"",
+        "build": "tsc -b && vite build && node scripts/content-scripts.mjs",
         "format": "prettier --write \"./src/**/*.{ts,tsx}\""
     },
     "license": "ISC",

@@ -5,6 +5,7 @@ import * as path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const name = process.env.CONTENT_SCRIPT_NAME || 'main'
 
 export default defineConfig({
     resolve: {
@@ -19,13 +20,13 @@ export default defineConfig({
         emptyOutDir: false,
         sourcemap: process.env.NODE_ENV !== 'production' ? 'inline' : false,
         lib: {
-            entry: path.resolve(__dirname, 'src/scripts/content/index.tsx'),
-            name: 'content',
+            entry: path.resolve(__dirname, `src/content-scripts/${name}/index.tsx`),
+            name: name.replace(/-/g, '_'),
             formats: ['iife'],
         },
         rollupOptions: {
             output: {
-                entryFileNames: 'content.js',
+                entryFileNames: `content-${name}.js`,
                 extend: true,
             },
         },

@@ -2,7 +2,7 @@
 
 > **Updated 2026** — Fully modernized with React 19, Tailwind CSS v4, Vite 6, TypeScript 5.9, and pnpm.
 
-A minimal, production-ready Chrome Extension (Manifest V3) template. No bloat, no magic — just a clean starting point.
+A minimal, production-ready Chrome Extension (Manifest V3) template. Drop a folder, get a content script — zero config.
 
 ## Stack
 
@@ -41,29 +41,22 @@ Outputs to `dist/`. Load it in Chrome: `chrome://extensions` → Developer mode 
 
 ```
 src/
+├── content-scripts/       # Auto-discovered content scripts
+│   └── main/              # Each folder = one content script
+│       ├── index.tsx       # Entry point (required)
+│       ├── App.tsx         # Your components
+│       └── config.json     # { "matches": ["<all_urls>"] }
 ├── scripts/
-│   ├── content/          # Injected into pages (Shadow DOM in production)
-│   │   ├── App.tsx
-│   │   └── index.tsx
-│   ├── onInstalled/      # Shown on first install
-│   │   ├── index.tsx
-│   │   └── onInstalled.html
+│   ├── onInstalled/       # Shown on first install
 │   ├── options/           # Extension options page
-│   │   ├── Options.tsx
-│   │   ├── index.tsx
-│   │   └── options.html
 │   ├── popup/             # Browser action popup
-│   │   ├── Popup.tsx
-│   │   ├── index.tsx
-│   │   └── popup.html
 │   └── service-worker/    # Background service worker
-│       └── service-worker.ts
 ├── styles/
 │   └── index.css          # Tailwind v4 config + imports
 ├── utils/
 │   └── browser.ts         # Chrome messaging helpers
 ├── assets/                # Extension icons
-└── manifest.ts            # Generates manifest.json
+└── manifest.ts            # Auto-generates manifest.json
 ```
 
 ## Quick Reload Shortcut
@@ -74,66 +67,41 @@ To disable it for production, remove the `commands` block from `src/manifest.ts`
 
 ## Debugging Content Scripts
 
-Content scripts are bundled into a single `content.js` via the IIFE build. To debug your source `.tsx` files:
+Content scripts are bundled as IIFE builds. To debug your source `.tsx` files:
 
-1. In `vite.config.content.ts`, sourcemaps are enabled in development by default (`sourcemap: 'inline'`).
-2. Run `pnpm dev` so the content script builds with inline sourcemaps.
-3. Open any page where the content script runs, then open DevTools (`F12`).
-4. Go to **Sources** → **Page** → look under the `content.js` source map tree. Your original `.tsx` files will appear there and you can set breakpoints directly.
-5. Alternatively, add `debugger` statements in your content script code — Chrome will pause execution when DevTools is open.
+1. Sourcemaps are enabled in dev by default (`sourcemap: 'inline'` in `vite.config.content.ts`).
+2. Run `pnpm dev` to build with inline sourcemaps.
+3. Open DevTools (`F12`) on any page where the content script runs.
+4. **Sources** → **Page** → find the source map tree for your content script. Your original `.tsx` files appear there with full breakpoint support.
+5. Or just add `debugger` statements directly in your code.
 
-For the **service worker**, go to `chrome://extensions`, find your extension, and click **"Inspect views: service worker"** to open a dedicated DevTools window.
+For the **service worker**, go to `chrome://extensions` → click **"Inspect views: service worker"**.
 
-## Multiple Content Scripts
+## Content Scripts (Auto-Discovery)
 
-To run different content scripts on different sites:
+Content scripts are auto-discovered from `src/content-scripts/`. Each subfolder with an `index.tsx` becomes a content script — no config files to edit, no build scripts to update.
 
-1. Create a new directory under `src/scripts/` (e.g., `src/scripts/content-github/`).
-2. Add your entry `index.tsx` and components there.
-3. Create a new Vite config (e.g., `vite.config.content-github.ts`) based on `vite.config.content.ts`, pointing to your new entry and outputting a different filename:
+### Add a new content script
 
-```ts
-// vite.config.content-github.ts
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import * as path from 'path'
-import { fileURLToPath } from 'url'
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-
-export default defineConfig({
-    resolve: { alias: { '@': path.resolve(__dirname, 'src') } },
-    define: { 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development') },
-    build: {
-        outDir: 'dist/js',
-        emptyOutDir: false,
-        lib: {
-            entry: path.resolve(__dirname, 'src/scripts/content-github/index.tsx'),
-            name: 'contentGithub',
-            formats: ['iife'],
-        },
-        rollupOptions: { output: { entryFileNames: 'content-github.js', extend: true } },
-    },
-    plugins: [tailwindcss(), react()],
-})
+```bash
+mkdir src/content-scripts/github
 ```
 
-4. Register it in `src/manifest.ts` under `content_scripts`:
+Create `src/content-scripts/github/index.tsx`:
 
-```ts
-content_scripts: [
-    { matches: ['<all_urls>'], js: ['./js/content.js'] },
-    { matches: ['https://github.com/*'], js: ['./js/content-github.js'] },
-],
+```tsx
+console.log('Running on GitHub!')
 ```
 
-5. Add the build command to your scripts in `package.json`:
+Optionally add `src/content-scripts/github/config.json` to control which sites it runs on:
 
 ```json
-"dev": "concurrently \"vite build --watch\" \"vite build --watch --config vite.config.content.ts\" \"vite build --watch --config vite.config.content-github.ts\"",
-"build": "tsc -b && vite build && vite build --config vite.config.content.ts && vite build --config vite.config.content-github.ts"
+{ "matches": ["https://github.com/*"] }
 ```
+
+If no `config.json` is provided, defaults to `<all_urls>`.
+
+That's it. Run `pnpm build` — it's automatically built to `dist/js/content-github.js` and registered in the manifest.
 
 ## Customizing Tailwind
 

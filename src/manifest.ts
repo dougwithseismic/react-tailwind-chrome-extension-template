@@ -1,6 +1,10 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
+interface ContentScriptConfig {
+    matches: string[]
+}
+
 interface Manifest {
     manifest_version: number
     name: string
@@ -20,6 +24,26 @@ interface Manifest {
             description: string
         }
     >
+}
+
+function discoverContentScripts(): Array<{ matches: string[]; js: string[] }> {
+    const contentDir = path.resolve('src/content-scripts')
+    if (!fs.existsSync(contentDir)) return []
+
+    return fs
+        .readdirSync(contentDir, { withFileTypes: true })
+        .filter(d => d.isDirectory() && fs.existsSync(path.join(contentDir, d.name, 'index.tsx')))
+        .map(d => {
+            const configPath = path.join(contentDir, d.name, 'config.json')
+            const config: ContentScriptConfig = fs.existsSync(configPath)
+                ? JSON.parse(fs.readFileSync(configPath, 'utf-8'))
+                : { matches: ['<all_urls>'] }
+
+            return {
+                matches: config.matches,
+                js: [`./js/content-${d.name}.js`],
+            }
+        })
 }
 
 function createManifest(resources: string[]): Manifest {
@@ -47,12 +71,7 @@ function createManifest(resources: string[]): Manifest {
             '128': './assets/icon-128.png',
         },
         permissions: [],
-        content_scripts: [
-            {
-                matches: ['<all_urls>'],
-                js: ['./js/content.js'],
-            },
-        ],
+        content_scripts: discoverContentScripts(),
         web_accessible_resources: [
             {
                 matches: ['https://*/*', 'http://*/*'],
